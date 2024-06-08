@@ -121,7 +121,20 @@
     margin: 10px;
     height: 800px;
     background-color: white;
+    padding: 10px;
 }
+.list{
+    margin: 10px;
+}
+.elements{
+    border:1px solid black;
+    border-radius:30px;
+    padding: 10px;
+    margin:2px;
+    display: flex;
+    justify-content: space-between;
+}
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
