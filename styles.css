@@ -65,7 +65,7 @@
     flex: 1;
     border-radius: 10px 0 0 10px;
     padding: 4px;
-    border: none;
+    
 }
 
 .search-bar-input:focus {
@@ -76,7 +76,7 @@
     cursor: pointer;
     width: 30px;
     background-color: green;
-    border: none;
+    
     border-radius: 0 10px 10px 0;
     opacity: 0.8;
 }
@@ -115,13 +115,16 @@
     opacity: 1;
 }
 
-.from-output,.to-output{
+.output{
+    display: flex;
+    flex-direction: column;
     width: 500px;
     height: 600px;
     margin: 10px;
     padding:10px;
     border-radius:30px;
     background-color:white
+    
 
 }
 .list-elements{
@@ -129,6 +132,7 @@
     height: 100%;
     border-radius:30px;
     padding:10px;
+    
 }
 .list-elements option{
     margin: 10px;
@@ -136,7 +140,6 @@
     border-radius:10px;
     padding: 10px;;
 }
-
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
