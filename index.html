@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,7 @@
                 <div class="header">
                     <div class="fixed"><p>FROM</p></div>
                     <div class="search-bar">
-                        <input class="search-bar-input" type="text" placeholder="Search...">
+                        <input onkeypress="search()" class="search-bar-input" type="text" placeholder="Search...">
                         <button class="search-button"><img style="width: 17px;" src="search.png"></button>
                     </div>
                     <div style="width: auto;">
@@ -33,24 +34,22 @@
                         </select>
                     </div>
                 </div>
-                <div class="output">
-                    <div id="from-list" class="list">
-                        <div id="1" class="elements">
-                            <p>asdasa</p>
-                            <input name="" class="check"type="checkbox" value="1">
-                        </div>
-                           <div id="2" class="elements">
-                            <p>asdasadsasdda</p>
-                            <input name="" class="check"type="checkbox" value="2">
-                           </div>
-                    </div>
+                <div class="from-output">
+                    <select id="from-list"class="list-elements" multiple>
+                        <option>asddaa</option>
+                        <option>asdadasda</option>
+                        <option>asdasas</option>
+                        <option>werwerwefwfwfwefasddas</option>
+                        
+                    </select>
+                    
                 </div>
             </div>
             <div class="transfer-button">
-                <button onclick="transfer('f','a')">>></button>
-                <button onclick="transfer('f','n')">></button>
-                <button onclick="transfer('t','n')"><</button>
-                <button onclick="transfer('t','a')"><<</button>
+                <button onclick="transfer('from-list','to-list','a')">>></button>
+                <button onclick="transfer('from-list' ,'to-list' ,'n')">></button>
+                <button onclick="transfer('to-list' ,'from-list' ,'n')"><</button>
+                <button onclick="transfer('to-list' ,'from-list' ,'a')"><<</button>
             </div>
             <div class="to">
                 <div class="header">
@@ -76,10 +75,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="output">
-                    <div id="to-list" class="list">
-                     
-                    </div>
+                <div class="to-output">
+                    <select id="to-list"class="list-elements" multiple></select>
                 </div>
             </div>
         </div>
