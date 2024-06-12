@@ -5,14 +5,6 @@ $username = "root"; // Change this to your database username
 $password = ""; // Change this to your database password
 $dbname = "unnati_db"; // Change this to your database name
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 function fetchHeadquarters($conn, $ct) {
     $sql = "SELECT id, name FROM master_headquarters WHERE crop_type='$ct'";
     $result = $conn->query($sql);
@@ -22,19 +14,61 @@ function fetchHeadquarters($conn, $ct) {
         while ($row = $result->fetch_assoc()) {
             echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
             
-        }
+        }$conn->close();
+        
     } else {
-        echo "No results found";
+        echo "No results found";$conn->close();
     }
+
+    
+    
+}
+if(isset($_GET['crop_type'])) {
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $crop_type = $_GET['crop_type'];
+    fetchHeadquarters($conn, $crop_type);
     $conn->close();
 }
 
-// Fetch users based on headquarters
-if(isset($_GET['crop_type'])) {
-    $crop_type = $_GET['crop_type'];
-    fetchHeadquarters($conn, $crop_type);
+function fetchUsers($conn, $hqid,$roleid,$ct){
+    $sql = "SELECT id, name FROM master_users WHERE role_id = '$roleid' ";
+
+    if ($ct == 'FC') {
+        $sql .= "AND fc_hq_id = '$hqid'";
+    } else {
+        $sql .= "AND vc_hq_id = '$hqid'";
+    }
+    
+
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+     
+        while ($row = $result->fetch_assoc()) {
+            echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
+            
+        }$conn->close();
+    } else {
+        echo "No results found";$conn->close();
+    }
+    $conn->close();
+    
 }
-$conn->close();
+if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $hqid = $_GET['hqid'];
+    $roleid = $_GET['roleid'];
+    $ct=$_GET['ct'];
+    fetchUsers($conn, $hqid, $roleid, $ct);
+    $conn->close();
+    
+}
 
 ?>
 
@@ -283,13 +317,13 @@ $conn->close();
                         <button class="search-button"><img style="width: 17px;" src="search.png"></button>
                     </div>
                     <div style="width: auto;">
-                        <select id="hqlist1"class="drop-1" >
+                        <select id="hqlist1"class="drop-1" onchange="fHq(this.value)">
                          <option >Headquarter</option>
                         </select>
                     </div>
                     <div style="width:auto;">
-                        <select class="drop-2">
-                        <option  >Role</option>
+                        <select id="role" class="drop-2" onchange="fr(this.value)">
+                        <option >Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
                             <option value="11">RET</option>
@@ -370,10 +404,29 @@ function fH(ct){
                 document.getElementById('hqlist2').innerHTML = this.responseText;
             }
         }
+        
         xhr.send();
+        
 }
-function fU(){
-
+function fHq(hqid){
+    fU(hqid,document.getElementById('role').value);
+}
+function fr(roleid){
+    fU(document.getElementById('hqlist1').value,roleid);
+}
+function fU(hqid,roleid){
+    if(hqid!=='Headquarter'&&roleid!='Role'){
+    const xhr = new XMLHttpRequest();
+    const ct=document.getElementById('crop-type').value;
+    xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid+"&ct="+ct, true);
+        xhr.onload = function() {
+            if (this.status === 200) {
+                console.log((this.responseText));
+                document.getElementById('from-list').innerHTML = this.responseText;
+                
+            }
+        }
+        xhr.send();}
 }
 function search(input,id){
    
@@ -381,6 +434,3 @@ function search(input,id){
     </script>
 </body>
 </html>
-<?php
-$conn->close();
-?>
