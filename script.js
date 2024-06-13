@@ -41,6 +41,19 @@ function fU(hqid,roleid){
         xhr.send();}
 }
 function search(input,id){
-   
-}
-    
+    const lists=document.getElementById(id);
+    const array =input.split(',');
+    const store=[];
+    for(var j=0;j<array.length;j++){
+ 
+    for(var i=0;i<lists.childElementCount;i++){
+     let string1=lists.children[i].value;
+     let string2=lists.children[i].textContent;
+     if(string1.toUpperCase().indexOf(input.toUpperCase())==-1 && string2.toUpperCase().indexOf(input.toUpperCase())==-1 && store.includes(i)==false){
+         lists.children[i].style.display='none';
+     }
+     else{
+         lists.children[i].style.display='';
+     }
+    }}
+} 
