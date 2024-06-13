@@ -1,5 +1,4 @@
-
-        * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,11 +14,11 @@
 }
 
 .canvas {
-    width: 1200px;
-    height: 600px;
+    width: 75rem;
+    height: 37.5rem;
     background-color: red;
-    padding: 20px;
-    border-radius: 50px;
+    padding: 1.25rem;
+    border-radius: 3.125rem;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -27,31 +26,30 @@
 
 .from, .to {
     width: 50%;
-    height: 570px;
-    padding: 10px;
+    height: 35.625rem;
+    padding: 0.625rem;
     background-color: wheat;
-    border-radius: 30px;
-    margin: 10px;
+    border-radius: 1.875rem;
+    margin: 0.625rem;
     display: flex;
     flex-direction: column;
-    align-content: center;
     justify-content: space-evenly;
 }
 
 .header {
     display: flex;
     background-color: aqua;
-    border-radius: 30px;
+    border-radius: 1.875rem;
     justify-content: space-evenly;
-    padding: 10px;
+    padding: 0.625rem;
     flex-wrap: wrap;
 }
 
 .drop-1, .drop-2, .fixed {
     border: none;
-    border-radius: 10px;
-    margin: 10px;
-    padding: 4px;
+    border-radius: 0.625rem;
+    margin: 0.625rem;
+    padding: 0.25rem;
 }
 
 .fixed {
@@ -60,24 +58,22 @@
 
 .search-bar {
     display: flex;
-    margin: 10px;
+    margin: 0.625rem;
+    background-color: white;
+    border-radius: 0.625rem;
 }
 
 .search-bar-input {
-    background-image: url('search.png');
-    background-repeat: no-repeat;
-    background-size: 15px;
     flex: auto;
-    border-radius: 10px;
-    padding: 4px;
-    
+    padding: 0.25rem 1.25rem 0.25rem 0.25rem;
+    border-radius: 0.625rem;
+    background: url('search.png') no-repeat 98% 50%;
+    background-size: 0.9375rem;
 }
 
 .search-bar-input:focus {
     outline: none;
 }
-
-
 
 .transfer-button {
     display: flex;
@@ -87,10 +83,10 @@
 .transfer-button button {
     outline: none;
     border: none;
-    padding: 10px;
-    margin: 2px;
+    padding: 0.625rem;
+    margin: 0.125rem;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     text-align: center;
     background-color: green;
     opacity: 0.8;
@@ -104,40 +100,49 @@
     opacity: 1;
 }
 
-.output{
+.output {
     display: flex;
     flex-direction: column;
-    width: 500px;
-    height: 600px;
-    margin: 10px;
-    padding:10px;
-    border-radius:30px;
-    background-color:white
-    
-
+    width: 31.25rem;
+    height: 37.5rem;
+    margin: 0.625rem;
+    padding: 0.625rem;
+    border-radius: 1.875rem;
+    background-color: white;
 }
-.list-elements{
+
+.list-elements {
     width: 100%;
     height: 100%;
-    border-radius:30px;
-    padding:10px;
-    
+    border-radius: 1.875rem;
+    padding: 0.625rem;
 }
-.list-elements option{
-    margin: 10px;
-    border:1px solid black;
-    border-radius:10px;
-    padding: 10px;;
+
+.list-elements option {
+    margin: 0.625rem;
+    border: 1px solid black;
+    border-radius: 0.625rem;
+    padding: 0.625rem;
 }
-.submit-button{
-    margin: 10px; padding:10px; border-radius:20px;cursor:pointer;font-size: x-large; background-color:green;opacity: .8;
+
+.submit-button {
+    margin: 0.625rem;
+    padding: 0.625rem;
+    border-radius: 1.25rem;
+    cursor: pointer;
+    font-size: large;
+    background-color: green;
+    opacity: 0.8;
 }
-.submit-button:hover{
+
+.submit-button:hover {
     opacity: 1;
 }
-.submit-button:active{
+
+.submit-button:active {
     transform: scale(0.96);
 }
+
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
     .canvas {

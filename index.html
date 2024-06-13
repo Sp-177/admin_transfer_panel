@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,39 +14,36 @@
                 <div class="header">
                     <div class="fixed"><p>FROM</p></div>
                     <div class="search-bar">
-                        <input onkeyup="search(value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        <input onkeyup="search(this.value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
-                    <div style="width: auto;">
-                        <select id="hqlist1"class="drop-1" onchange="fHq(this.value)">
-                         <option >Headquarter</option>
+                    <div>
+                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value)">
+                            <option>Headquarter</option>
                         </select>
                     </div>
-                    <div style="width:auto;">
+                    <div>
                         <select id="role" class="drop-2" onchange="fr(this.value)">
-                        <option >Role</option>
+                            <option>Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
                             <option value="11">RET</option>
                             <option value="10">DRT</option>
                         </select>
                     </div>
-                    <div style="width:auto;">
-                        <select id="crop-type"class="drop-2" onchange="fH(this.value)">
-                            <option  >CropType</option>
+                    <div>
+                        <select id="crop-type" class="drop-2" onchange="fH(this.value)">
+                            <option>CropType</option>
                             <option value="FC">FC</option>
                             <option value="VC">VC</option>
                         </select>
                     </div>
                 </div>
                 <div class="output">
-                    <select id="from-list" class="list-elements" multiple>
-                    </select>
+                    <select id="from-list" class="list-elements" multiple></select>
                     <div class="search-bar">
                         <input onkeyup="search(this.value,'from-list')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
                     </div>
-                    <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
+                    <p style="font-size: 0.9375rem; margin-left: 0.625rem; color: gray;">( / or , or - or ' ' separated values)</p>
                 </div>
             </div>
             <div class="transfer-button">
@@ -60,28 +56,27 @@
                 <div class="header">
                     <div class="fixed"><p>TO</p></div>
                     <div class="search-bar">
-                        <input class="search-bar-input" onkeyup="search(value,'hqlist2')" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')" type="text" placeholder="Search...">
                     </div>
-                    <div style="width:auto;">
+                    <div>
                         <select id="hqlist2" class="drop-1">
-                        <option >Headquarter</option>
+                            <option>Headquarter</option>
                         </select>
                     </div>
-                   
                 </div>
                 <div class="output">
                     <select id="to-list" class="list-elements" multiple></select>
                     <div class="search-bar">
                         <input onkeyup="search(this.value,'to-list')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
                     </div>
-                    <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
+                    <p style="font-size: 0.9375rem; margin-left: 0.625rem; color: gray;">( / or , or - or ' ' separated values)</p>
                 </div>
             </div>
         </div>
-        <button class="submit-button" >SUBMIT</button>
+        <button class="submit-button">SUBMIT</button>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js">
+       
+    </script>
 </body>
 </html>
