@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="canvas">
+            <div class="from">
+                <div class="header">
+                    <div class="fixed"><p>FROM</p></div>
+                    <div class="search-bar">
+                        <input onkeypress="search(value,'hq-list')" class="search-bar-input" type="text" placeholder="Search...">
+                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                    </div>
+                    <div style="width: auto;">
+                        <select id="hqlist1"class="drop-1" onchange="fHq(this.value)">
+                         <option >Headquarter</option>
+                        </select>
+                    </div>
+                    <div style="width:auto;">
+                        <select id="role" class="drop-2" onchange="fr(this.value)">
+                        <option >Role</option>
+                            <option value="4">TSM</option>
+                            <option value="5">MDO</option>
+                            <option value="11">RET</option>
+                            <option value="10">DRT</option>
+                        </select>
+                    </div>
+                    <div style="width:auto;">
+                        <select id="crop-type"class="drop-2" onchange="fH(this.value)">
+                            <option  >CropType</option>
+                            <option value="FC">FC</option>
+                            <option value="VC">VC</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="output">
+                    <select id="from-list" class="list-elements" multiple>
+                    </select>
+                    <div class="search-bar">
+                        <input onkeypress="search()" class="search-bar-input" type="text" placeholder="Search...">
+                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                    </div>
+                    <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
+                </div>
+            </div>
+            <div class="transfer-button">
+                <button onclick="transfer('from-list','to-list','a')">>></button>
+                <button onclick="transfer('from-list' ,'to-list' ,'n')">></button>
+                <button onclick="transfer('to-list' ,'from-list' ,'n')"><</button>
+                <button onclick="transfer('to-list' ,'from-list' ,'a')"><<</button>
+            </div>
+            <div class="to">
+                <div class="header">
+                    <div class="fixed"><p>TO</p></div>
+                    <div class="search-bar">
+                        <input class="search-bar-input" type="text" placeholder="Search...">
+                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                    </div>
+                    <div style="width:auto;">
+                        <select id="hqlist2" class="drop-1">
+                        <option >Headquarter</option>
+                        </select>
+                    </div>
+                   
+                </div>
+                <div class="output">
+                    <select id="to-list" class="list-elements" multiple></select>
+                    <div class="search-bar">
+                        <input onkeypress="search()" class="search-bar-input" type="text" placeholder="Search...">
+                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                    </div>
+                    <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
+                </div>
+            </div>
+        </div>
+        <button class="submit-button" >SUBMIT</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
