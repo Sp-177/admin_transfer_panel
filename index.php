@@ -314,7 +314,7 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                     <div class="fixed"><p>FROM</p></div>
                     <div class="search-bar">
                         <input onkeyup="search(this.value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        
                     </div>
                     <div style="width: auto;">
                         <select id="hqlist1"class="drop-1" onchange="fHq(this.value)">
@@ -343,7 +343,7 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                     </select>
                     <div class="search-bar">
                         <input onkeyup="search(this.value,'from-list')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        
                     </div>
                     <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
                 </div>
@@ -359,7 +359,7 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                     <div class="fixed"><p>TO</p></div>
                     <div class="search-bar">
                         <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')"type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        
                     </div>
                     <div style="width:auto;">
                         <select id="hqlist2" class="drop-1">
@@ -372,7 +372,7 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                     <select id="to-list" class="list-elements" multiple></select>
                     <div class="search-bar">
                         <input onkeyup="search(this.value,'to-list')" class="search-bar-input" type="text" placeholder="Search...">
-                        <button class="search-button"><img style="width: 17px;" src="search.png"></button>
+                        
                     </div>
                     <p style="font-size: 15px;margin-left: 10px;color:gray;">( / or , or  -  or ' ' separeted values)</p>
                 </div>
@@ -421,7 +421,7 @@ function fU(hqid,roleid){
     xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid+"&ct="+ct, true);
         xhr.onload = function() {
             if (this.status === 200) {
-                console.log((this.responseText));
+              
                 document.getElementById('from-list').innerHTML = this.responseText;
                 
             }
@@ -432,17 +432,21 @@ function search(input,id){
    const lists=document.getElementById(id);
    const array =input.split(',');
    const store=[];
+   console.log(array);
    for(var j=0;j<array.length;j++){
 
    for(var i=0;i<lists.childElementCount;i++){
     let string1=lists.children[i].value;
     let string2=lists.children[i].textContent;
-    if(string1.toUpperCase().indexOf(input.toUpperCase())==-1 && string2.toUpperCase().indexOf(input.toUpperCase())==-1 && store.includes(i)==false){
+    if(string1.toUpperCase().indexOf(array[j].toUpperCase())==-1 && string2.toUpperCase().indexOf(array[j].toUpperCase())==-1 && store.includes(i)==false){
         lists.children[i].style.display='none';
     }
     else{
         lists.children[i].style.display='';
     }
+   }
+   for(var i=0;i<lists.childElementCount;i++){
+    if(lists.children[i].style.display===''){store.push(i);}
    }
 }
 }
