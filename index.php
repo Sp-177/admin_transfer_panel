@@ -31,12 +31,12 @@ if (isset($_GET['crop_type'])) {
 
 function fetchUsers($conn, $hqid, $roleid, $ct) {
     $column = $ct == 'FC' ? 'fc_hq_id' : 'vc_hq_id';
-    $sql = "SELECT id, name FROM master_users WHERE role_id='$roleid' AND $column='$hqid'";
+    $sql = "SELECT id, name,mobile FROM master_users WHERE role_id='$roleid' AND $column='$hqid'";
     $result = $conn->query($sql);
 
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
+            echo "<option value='" . $row["id"] . "'>" . $row["name"]." | ". $row["mobile"] . "</option>";
         }
     } else {
         echo "<option>No results found</option>";
@@ -350,7 +350,8 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
         function transfer(src, dst, all) {
             const source = document.getElementById(src);
             const destination = document.getElementById(dst);
-            const items = Array.from(all === 'a' ? source.options : source.selectedOptions);
+            
+            const items = Array.from(all === 'a'? Array.from(source.options).filter(option => option.style.display !== 'none'): source.selectedOptions);
             items.forEach(item => destination.appendChild(item));
         }
 

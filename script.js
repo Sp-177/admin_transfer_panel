@@ -1,10 +1,10 @@
 function transfer(src, dst, all) {
     const source = document.getElementById(src);
     const destination = document.getElementById(dst);
-    const items = Array.from(all === 'a' ? source.options : source.selectedOptions);
+    
+    const items = Array.from(all === 'a'? Array.from(source.options).filter(option => option.style.display !== 'none'): source.selectedOptions);
     items.forEach(item => destination.appendChild(item));
 }
-
 function fH(ct) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "?crop_type=" + ct, true);
