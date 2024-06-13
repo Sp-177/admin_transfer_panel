@@ -392,7 +392,6 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             const list = document.getElementById(id);
             const terms = input.split(/[,/\s-]+/).map(term => term.trim().toUpperCase());
             const options = Array.from(list.options);
-
             options.forEach(option => {
                 const text = option.textContent.toUpperCase();
                 const value = option.value.toUpperCase();

@@ -43,7 +43,7 @@ function search(input, id) {
     const list = document.getElementById(id);
     const terms = input.split(/[,/\s-]+/).map(term => term.trim().toUpperCase());
     const options = Array.from(list.options);
-
+    
     options.forEach(option => {
         const text = option.textContent.toUpperCase();
         const value = option.value.toUpperCase();
