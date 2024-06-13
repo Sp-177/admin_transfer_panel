@@ -149,8 +149,11 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
 }
 
 .search-bar-input {
-    flex: 1;
-    border-radius: 10px 0 0 10px;
+    background-image: url('search.png');
+    background-repeat: no-repeat;
+    background-size: 15px;
+    flex: auto;
+    border-radius: 10px;
     padding: 4px;
     
 }
@@ -159,23 +162,7 @@ if(isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
     outline: none;
 }
 
-.search-button {
-    cursor: pointer;
-    width: 30px;
-    background-color: green;
-    
-    border-radius: 0 10px 10px 0;
-    opacity: 0.8;
-}
 
-.search-button:hover {
-    opacity: 1;
-}
-
-.search-button:active {
-    transform: scale(0.97);
-    border: none;
-}
 
 .transfer-button {
     display: flex;
