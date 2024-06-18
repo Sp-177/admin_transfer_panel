@@ -24,6 +24,44 @@ function fHq(hqid,input) {
 }
 
 function fr(roleid,input) {
+    if(roleid==='4'||roleid==='5'){
+        let opp=(input==='role'?'role1':'role');
+        let options=document.getElementById(opp);
+        Object.values(options.options).forEach((item,index)=>{
+            if(item.value==='10'||item.value==='11'){
+                item.disabled=true;
+                item.style.display='none';
+            }
+            else{
+                item.disabled=false;
+                item.style.display='';
+            }
+        });
+    }
+    else if(roleid==='10'||roleid==='11'){
+        let opp=(input==='role'?'role1':'role');
+        let options=document.getElementById(opp);
+        Object.values(options.options).forEach((item,index)=>{
+            if(item.value==='4'||item.value==='5'){
+                item.disabled=true;
+                item.style.display='none';
+            }
+            else{
+                item.disabled=false;
+                item.style.display='';
+            }
+        });
+    }
+   else{
+    let opp=(input==='role'?'role1':'role');
+        let options=document.getElementById(opp);
+        Object.values(options.options).forEach((item,index)=>{
+            
+                item.disabled=false;
+                item.style.display='';
+            
+        });
+   }
     let output =(input==='role'?'from-list':'to-list');
     let hqid=(input==='role'?'hqlist1':'hqlist2');
     fU(document.getElementById(hqid).value, roleid,output);
