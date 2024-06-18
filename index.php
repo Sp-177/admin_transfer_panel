@@ -62,6 +62,7 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Transfer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         * {
             margin: 0;
@@ -324,7 +325,8 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 </div>
             </div>
         </div>
-        <button class="submit-button">Submit</button>
+        <button id='submit_button'class="submit-button" onclick="submit('submit_button')">Submit  </button>
+       
     </div>
     <script>
         function transfer(src, dst, all) {
@@ -401,6 +403,10 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 const match = terms.some(term => text.includes(term) || value.includes(term));
                 option.style.display = match ? '' : 'none';
             });
+        }
+        function submit(input){
+            const submitbutton=document.getElementById(input);
+            submitbutton.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>  LOADING';
         }
     </script>
 </body>
