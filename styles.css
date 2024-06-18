@@ -88,6 +88,7 @@
     cursor: pointer;
     border-radius: 0.625rem;
     text-align: center;
+    color: white;
     background-color: green;
     opacity: 0.8;
 }
@@ -132,6 +133,7 @@
     cursor: pointer;
     font-size: large;
     background-color: green;
+    color: white;
     opacity: 0.8;
 }
 

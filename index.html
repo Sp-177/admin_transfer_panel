@@ -1,11 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Your CSS code here */
+    </style>
 </head>
 <body>
     <div class="container">
@@ -31,7 +32,7 @@
                         </select>
                     </div>
                     <div>
-                        <select id="crop-type" class="drop-2" onchange="fH(this.value)">
+                        <select id="crop-type" class="drop-2" onchange="fH(this.value,'crop-type')">
                             <option>CropType</option>
                             <option value="FC">FC</option>
                             <option value="VC">VC</option>
@@ -59,7 +60,7 @@
                         <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist2" class="drop-1"onchange="fHq(this.value,'hqlist2')">
+                        <select id="hqlist2" class="drop-1" onchange="fHq(this.value,'hqlist2')">
                             <option>Headquarter</option>
                         </select>
                     </div>
@@ -70,6 +71,13 @@
                             <option value="5">MDO</option>
                             <option value="11">RET</option>
                             <option value="10">DRT</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="crop-type1" class="drop-2" onchange="fH(this.value,'crop-type1')">
+                            <option>CropType</option>
+                            <option value="FC">FC</option>
+                            <option value="VC">VC</option>
                         </select>
                     </div>
                 </div>
@@ -84,8 +92,8 @@
         </div>
         <button class="submit-button">SUBMIT</button>
     </div>
-    <script src="script.js">
-       
+    <script>
+        // JavaScript functions here
     </script>
 </body>
 </html>

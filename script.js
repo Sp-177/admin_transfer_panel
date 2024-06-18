@@ -1,84 +1,63 @@
 function transfer(src, dst, all) {
     const source = document.getElementById(src);
     const destination = document.getElementById(dst);
-    
-    const items = Array.from(all === 'a'? Array.from(source.options).filter(option => option.style.display !== 'none'): source.selectedOptions);
+
+    const items = Array.from(all === 'a' ? Array.from(source.options).filter(option => option.style.display !== 'none') : source.selectedOptions);
     items.forEach(item => destination.appendChild(item));
 }
 
-function fH(ct,input) {
+function fH(cropType, input) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "?crop_type=" + ct, true);
+    xhr.open("GET", "?crop_type=" + cropType, true);
     xhr.onload = function() {
         if (this.status === 200) {
-            document.getElementById((input==='crop-type'?'hqlist1':'hqlist2')).innerHTML = this.responseText;
+            const selectElem = document.getElementById(input === 'crop-type' ? 'hqlist1' : 'hqlist2');
+            selectElem.innerHTML = this.responseText;
         }
-    }
+    };
     xhr.send();
 }
 
-function fHq(hqid,input) {
-    
-    let output =(input==='hqlist1'?'from-list':'to-list');
-    let roleid=(input==='hqlist1'?'role':'role1')
-    fU(hqid, document.getElementById(roleid).value,output);
+function fHq(hqid, input) {
+    let output = input === 'hqlist1' ? 'from-list' : 'to-list';
+    let roleid = input === 'hqlist1' ? 'role' : 'role1';
+    fU(hqid, document.getElementById(roleid).value, output);
 }
 
-function fr(roleid,input) {
-    if(roleid==='4'||roleid==='5'){
-        let opp=(input==='role'?'role1':'role');
-        let options=document.getElementById(opp);
-        Object.values(options.options).forEach((item,index)=>{
-            if(item.value==='10'||item.value==='11'){
-                item.disabled=true;
-                item.style.display='none';
-            }
-            else{
-                item.disabled=false;
-                item.style.display='';
-            }
-        });
-    }
-    else if(roleid==='10'||roleid==='11'){
-        let opp=(input==='role'?'role1':'role');
-        let options=document.getElementById(opp);
-        Object.values(options.options).forEach((item,index)=>{
-            if(item.value==='4'||item.value==='5'){
-                item.disabled=true;
-                item.style.display='none';
-            }
-            else{
-                item.disabled=false;
-                item.style.display='';
-            }
-        });
-    }
-   else{
-    let opp=(input==='role'?'role1':'role');
-        let options=document.getElementById(opp);
-        Object.values(options.options).forEach((item,index)=>{
-            
-                item.disabled=false;
-                item.style.display='';
-            
-        });
-   }
-    let output =(input==='role'?'from-list':'to-list');
-    let hqid=(input==='role'?'hqlist1':'hqlist2');
-    fU(document.getElementById(hqid).value, roleid,output);
+function fr(roleid, input) {
+    const options = document.getElementById(input === 'role' ? 'role1' : 'role').options;
+    Array.from(options).forEach(option => {
+        if ((roleid === '4' ) && (option.value=='5'||option.value === '10' || option.value === '11')) {
+            option.disabled = true;
+            option.style.display = 'none';
+        } else if ((roleid === '5' ) && (option.value === '10' || option.value === '11')){
+            option.disabled = true;
+            option.style.display = 'none';}
+        else if ((roleid === '10' || roleid === '11') && (option.value === '4' || option.value === '5')) {
+            option.disabled = true;
+            option.style.display = 'none';
+        } else {
+            option.disabled = false;
+            option.style.display = '';
+        }
+    });
+
+    let output = input === 'role' ? 'from-list' : 'to-list';
+    let hqid = input === 'role' ? 'hqlist1' : 'hqlist2';
+    fU(document.getElementById(hqid).value, roleid, output);
 }
 
-function fU(hqid, roleid,output) {
-    
+function fU(hqid, roleid, output) {
     if (hqid !== 'Headquarter' && roleid !== 'Role') {
         const xhr = new XMLHttpRequest();
-        const ct = document.getElementById('crop-type').value;
-        xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + ct, true);
+        const cropType = document.getElementById((output==='to-list')?'crop-type1':'crop-type').value;
+        xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + cropType, true);
         xhr.onload = function() {
             if (this.status === 200) {
-                document.getElementById(output).innerHTML = this.responseText;
+                const selectElem = document.getElementById(output);
+                selectElem.innerHTML = this.responseText;
             }
-        }
+        };
         xhr.send();
     }
 }

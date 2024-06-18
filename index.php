@@ -1,22 +1,20 @@
 <?php
-// config.php
-$servername = "127.0.0.1:3333"; // Change this to your server name
-$username = "root"; // Change this to your database username
-$password = ""; // Change this to your database password
-$dbname = "unnati_db"; // Change this to your database name
+$servername = "127.0.0.1:3333"; // Update with your server name
+$username = "root"; // Update with your database username
+$password = ""; // Update with your database password
+$dbname = "unnati_db"; // Update with your database name
 
-function fetchHeadquarters($conn, $ct) {
-    $sql = "SELECT id, name FROM master_headquarters WHERE crop_type='$ct'";
-    $result = $conn->query($sql);
-    
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
-        }
-    } else {
-        echo "<option>No results found</option>";
+function fetchHeadquarters($conn, $crop_type) {
+    $stmt = $conn->prepare("SELECT id, name FROM master_headquarters WHERE crop_type = ?");
+    $stmt->bind_param("s", $crop_type);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $options = "<option>Headquarter</option>";
+    while ($row = $result->fetch_assoc()) {
+        $options .= "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
     }
-    $conn->close();
+    $stmt->close();
+    return $options;
 }
 
 if (isset($_GET['crop_type'])) {
@@ -25,23 +23,23 @@ if (isset($_GET['crop_type'])) {
         die("Connection failed: " . $conn->connect_error);
     }
     $crop_type = $_GET['crop_type'];
-    fetchHeadquarters($conn, $crop_type);
+    echo fetchHeadquarters($conn, $crop_type);
     $conn->close();
+    exit();
 }
 
-function fetchUsers($conn, $hqid, $roleid, $ct) {
-    $column = $ct == 'FC' ? 'fc_hq_id' : 'vc_hq_id';
-    $sql = "SELECT id, name,mobile FROM master_users WHERE role_id='$roleid' AND $column='$hqid'";
-    $result = $conn->query($sql);
-
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<option value='" . $row["id"] . "'>" . $row["name"]." | ". $row["mobile"] . "</option>";
-        }
-    } else {
-        echo "<option>No results found</option>";
+function fetchUsers($conn, $hqid, $roleid, $crop_type) {
+    $column = $crop_type == 'FC' ? 'fc_hq_id' : 'vc_hq_id';
+    $stmt = $conn->prepare("SELECT id, name, mobile FROM master_users WHERE role_id = ? AND $column = ?");
+    $stmt->bind_param("ii", $roleid, $hqid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $options = "";
+    while ($row = $result->fetch_assoc()) {
+        $options .= "<option value='" . $row["id"] . "'>" . $row["name"] . " | " . $row["mobile"] . "</option>";
     }
-    $conn->close();
+    $stmt->close();
+    return $options;
 }
 
 if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
@@ -51,9 +49,10 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
     }
     $hqid = $_GET['hqid'];
     $roleid = $_GET['roleid'];
-    $ct = $_GET['ct'];
-    fetchUsers($conn, $hqid, $roleid, $ct);
+    $crop_type = $_GET['ct'];
+    echo fetchUsers($conn, $hqid, $roleid, $crop_type);
     $conn->close();
+    exit();
 }
 ?>
 
@@ -62,14 +61,13 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User Transfer</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         .container {
             width: 100%;
             height: 100vh;
@@ -78,7 +76,6 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             justify-content: center;
             align-items: center;
         }
-
         .canvas {
             width: 75rem;
             height: 37.5rem;
@@ -89,7 +86,6 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             justify-content: space-around;
             align-items: center;
         }
-
         .from, .to {
             width: 50%;
             height: 35.625rem;
@@ -101,7 +97,6 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             flex-direction: column;
             justify-content: space-evenly;
         }
-
         .header {
             display: flex;
             background-color: aqua;
@@ -110,25 +105,21 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             padding: 0.625rem;
             flex-wrap: wrap;
         }
-
         .drop-1, .drop-2, .fixed {
             border: none;
             border-radius: 0.625rem;
             margin: 0.625rem;
             padding: 0.25rem;
         }
-
         .fixed {
             background-color: yellow;
         }
-
         .search-bar {
             display: flex;
             margin: 0.625rem;
             background-color: white;
             border-radius: 0.625rem;
         }
-
         .search-bar-input {
             flex: auto;
             padding: 0.25rem 1.25rem 0.25rem 0.25rem;
@@ -136,16 +127,13 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             background: url('search.png') no-repeat 98% 50%;
             background-size: 0.9375rem;
         }
-
         .search-bar-input:focus {
             outline: none;
         }
-
         .transfer-button {
             display: flex;
             flex-direction: column;
         }
-
         .transfer-button button {
             outline: none;
             border: none;
@@ -154,18 +142,16 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             cursor: pointer;
             border-radius: 0.625rem;
             text-align: center;
+            color: white;
             background-color: green;
             opacity: 0.8;
         }
-
         .transfer-button button:active {
             transform: scale(0.96);
         }
-
         .transfer-button button:hover {
             opacity: 1;
         }
-
         .output {
             display: flex;
             flex-direction: column;
@@ -176,21 +162,18 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             border-radius: 1.875rem;
             background-color: white;
         }
-
         .list-elements {
             width: 100%;
             height: 100%;
             border-radius: 1.875rem;
             padding: 0.625rem;
         }
-
         .list-elements option {
             margin: 0.625rem;
             border: 1px solid black;
             border-radius: 0.625rem;
             padding: 0.625rem;
         }
-
         .submit-button {
             margin: 0.625rem;
             padding: 0.625rem;
@@ -198,79 +181,60 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             cursor: pointer;
             font-size: large;
             background-color: green;
+            color: white;
             opacity: 0.8;
         }
-
         .submit-button:hover {
             opacity: 1;
         }
-
         .submit-button:active {
             transform: scale(0.96);
         }
-
-        /* Media Queries for Responsiveness */
         @media (max-width: 1200px) {
             .canvas {
                 flex-direction: column;
                 width: 95%;
             }
-
             .from, .to {
                 width: 90%;
                 margin: 10px 0;
             }
-
             .output {
                 width: 80%;
                 height: auto;
             }
         }
-
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
                 align-items: center;
             }
-
             .search-bar {
                 flex-direction: column;
                 align-items: center;
             }
-
             .search-bar-input {
                 border-radius: 10px 10px 0 0;
             }
-
-            .search-button {
-                border-radius: 0 0 10px 10px;
-                width: 100%;
-            }
-
             .output {
                 width: 90%;
                 height: auto;
             }
         }
-
         @media (max-width: 480px) {
             .canvas {
                 padding: 10px;
             }
-
             .from, .to {
                 padding: 5px;
             }
-
             .header, .drop-1, .drop-2, .fixed {
                 padding: 2px;
                 margin: 5px;
             }
-
-            .search-bar-input, .search-button {
+            .search-bar-input {
                 padding: 2px;
             }
-
             .output {
                 width: 95%;
                 height: auto;
@@ -285,15 +249,15 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 <div class="header">
                     <div class="fixed"><p>FROM</p></div>
                     <div class="search-bar">
-                        <input onkeyup="search(this.value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
+                        <input onkeyup="search(this.value, 'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value,'hqlist1')">
+                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value, 'hqlist1')">
                             <option>Headquarter</option>
                         </select>
                     </div>
                     <div>
-                        <select id="role" class="drop-2" onchange="fr(this.value,'role')">
+                        <select id="role" class="drop-2" onchange="fr(this.value, 'role')">
                             <option>Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
@@ -302,7 +266,7 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                         </select>
                     </div>
                     <div>
-                        <select id="crop-type" class="drop-2" onchange="fH(this.value,'crop-type')">
+                        <select id="crop-type" class="drop-2" onchange="fH(this.value, 'crop-type')">
                             <option>CropType</option>
                             <option value="FC">FC</option>
                             <option value="VC">VC</option>
@@ -312,30 +276,30 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 <div class="output">
                     <select id="from-list" class="list-elements" multiple></select>
                     <div class="search-bar">
-                        <input onkeyup="search(this.value,'from-list')" class="search-bar-input" type="text" placeholder="Search...">
+                        <input onkeyup="search(this.value, 'from-list')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
                     <p style="font-size: 0.9375rem; margin-left: 0.625rem; color: gray;">( / or , or - or ' ' separated values)</p>
                 </div>
             </div>
             <div class="transfer-button">
-                <button onclick="transfer('from-list','to-list','a')">>></button>
-                <button onclick="transfer('from-list' ,'to-list' ,'n')">></button>
-                <button onclick="transfer('to-list' ,'from-list' ,'n')"><</button>
-                <button onclick="transfer('to-list' ,'from-list' ,'a')"><<</button>
+                <button onclick="transfer('from-list', 'to-list', 'a')">>></button>
+                <button onclick="transfer('from-list', 'to-list', 'n')">></button>
+                <button onclick="transfer('to-list', 'from-list', 'n')"><</button>
+                <button onclick="transfer('to-list', 'from-list', 'a')"><<</button>
             </div>
             <div class="to">
                 <div class="header">
                     <div class="fixed"><p>TO</p></div>
                     <div class="search-bar">
-                        <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')" type="text" placeholder="Search...">
+                        <input class="search-bar-input" onkeyup="search(this.value, 'hqlist2')" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist2" class="drop-1"onchange="fHq(this.value,'hqlist2')">
+                        <select id="hqlist2" class="drop-1" onchange="fHq(this.value, 'hqlist2')">
                             <option>Headquarter</option>
                         </select>
                     </div>
                     <div>
-                        <select id="role1" class="drop-2" onchange="fr(this.value,'role1')">
+                        <select id="role1" class="drop-2" onchange="fr(this.value, 'role1')">
                             <option>Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
@@ -344,7 +308,7 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                         </select>
                     </div>
                     <div>
-                        <select id="crop-type1" class="drop-2" onchange="fH(this.value,'crop-type1')">
+                        <select id="crop-type1" class="drop-2" onchange="fH(this.value, 'crop-type1')">
                             <option>CropType</option>
                             <option value="FC">FC</option>
                             <option value="VC">VC</option>
@@ -354,96 +318,75 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 <div class="output">
                     <select id="to-list" class="list-elements" multiple></select>
                     <div class="search-bar">
-                        <input onkeyup="search(this.value,'to-list')" class="search-bar-input" type="text" placeholder="Search...">
+                        <input onkeyup="search(this.value, 'to-list')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
                     <p style="font-size: 0.9375rem; margin-left: 0.625rem; color: gray;">( / or , or - or ' ' separated values)</p>
                 </div>
             </div>
         </div>
-        <button class="submit-button">SUBMIT</button>
+        <button class="submit-button">Submit</button>
     </div>
     <script>
         function transfer(src, dst, all) {
             const source = document.getElementById(src);
             const destination = document.getElementById(dst);
-            
-            const items = Array.from(all === 'a'? Array.from(source.options).filter(option => option.style.display !== 'none'): source.selectedOptions);
+
+            const items = Array.from(all === 'a' ? Array.from(source.options).filter(option => option.style.display !== 'none') : source.selectedOptions);
             items.forEach(item => destination.appendChild(item));
         }
 
-        function fH(ct,input) {
+        function fH(cropType, input) {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "?crop_type=" + ct, true);
+            xhr.open("GET", "?crop_type=" + cropType, true);
             xhr.onload = function() {
                 if (this.status === 200) {
-                    document.getElementById((input==='crop-type'?'hqlist1':'hqlist2')).innerHTML = this.responseText;
+                    const selectElem = document.getElementById(input === 'crop-type' ? 'hqlist1' : 'hqlist2');
+                    selectElem.innerHTML = this.responseText;
                 }
-            }
+            };
             xhr.send();
         }
 
-        function fHq(hqid,input) {
-            
-            let output =(input==='hqlist1'?'from-list':'to-list');
-            let roleid=(input==='hqlist1'?'role':'role1')
-            fU(hqid, document.getElementById(roleid).value,output);
+        function fHq(hqid, input) {
+            let output = input === 'hqlist1' ? 'from-list' : 'to-list';
+            let roleid = input === 'hqlist1' ? 'role' : 'role1';
+            fU(hqid, document.getElementById(roleid).value, output);
         }
 
-        function fr(roleid,input) {
-            if(roleid==='4'||roleid==='5'){
-                let opp=(input==='role'?'role1':'role');
-                let options=document.getElementById(opp);
-                Object.values(options.options).forEach((item,index)=>{
-                    if(item.value==='10'||item.value==='11'){
-                        item.disabled=true;
-                        item.style.display='none';
-                    }
-                    else{
-                        item.disabled=false;
-                        item.style.display='';
-                    }
-                });
-            }
-            else if(roleid==='10'||roleid==='11'){
-                let opp=(input==='role'?'role1':'role');
-                let options=document.getElementById(opp);
-                Object.values(options.options).forEach((item,index)=>{
-                    if(item.value==='4'||item.value==='5'){
-                        item.disabled=true;
-                        item.style.display='none';
-                    }
-                    else{
-                        item.disabled=false;
-                        item.style.display='';
-                    }
-                });
-            }
-           else{
-            let opp=(input==='role'?'role1':'role');
-                let options=document.getElementById(opp);
-                Object.values(options.options).forEach((item,index)=>{
-                    
-                        item.disabled=false;
-                        item.style.display='';
-                    
-                });
-           }
-            let output =(input==='role'?'from-list':'to-list');
-            let hqid=(input==='role'?'hqlist1':'hqlist2');
-            fU(document.getElementById(hqid).value, roleid,output);
+        function fr(roleid, input) {
+            const options = document.getElementById(input === 'role' ? 'role1' : 'role').options;
+            Array.from(options).forEach(option => {
+                if ((roleid === '4' ) && (option.value=='5'||option.value === '10' || option.value === '11')) {
+                    option.disabled = true;
+                    option.style.display = 'none';
+                } else if ((roleid === '5' ) && (option.value === '10' || option.value === '11')){
+                    option.disabled = true;
+                    option.style.display = 'none';}
+                else if ((roleid === '10' || roleid === '11') && (option.value === '4' || option.value === '5')) {
+                    option.disabled = true;
+                    option.style.display = 'none';
+                } else {
+                    option.disabled = false;
+                    option.style.display = '';
+                }
+            });
+
+            let output = input === 'role' ? 'from-list' : 'to-list';
+            let hqid = input === 'role' ? 'hqlist1' : 'hqlist2';
+            fU(document.getElementById(hqid).value, roleid, output);
         }
 
-        function fU(hqid, roleid,output) {
-            
+        function fU(hqid, roleid, output) {
             if (hqid !== 'Headquarter' && roleid !== 'Role') {
                 const xhr = new XMLHttpRequest();
-                const ct = document.getElementById('crop-type').value;
-                xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + ct, true);
+                const cropType = document.getElementById((output==='to-list')?'crop-type1':'crop-type').value;
+                xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + cropType, true);
                 xhr.onload = function() {
                     if (this.status === 200) {
-                        document.getElementById(output).innerHTML = this.responseText;
+                        const selectElem = document.getElementById(output);
+                        selectElem.innerHTML = this.responseText;
                     }
-                }
+                };
                 xhr.send();
             }
         }
