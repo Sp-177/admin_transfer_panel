@@ -17,12 +17,12 @@
                         <input onkeyup="search(this.value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value)">
+                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value,'hqlist1')">
                             <option>Headquarter</option>
                         </select>
                     </div>
                     <div>
-                        <select id="role" class="drop-2" onchange="fr(this.value)">
+                        <select id="role" class="drop-2" onchange="fr(this.value,'role')">
                             <option>Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
@@ -59,8 +59,17 @@
                         <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist2" class="drop-1">
+                        <select id="hqlist2" class="drop-1"onchange="fHq(this.value,'hqlist2')">
                             <option>Headquarter</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="role1" class="drop-2" onchange="fr(this.value,'role1')">
+                            <option>Role</option>
+                            <option value="4">TSM</option>
+                            <option value="5">MDO</option>
+                            <option value="11">RET</option>
+                            <option value="10">DRT</option>
                         </select>
                     </div>
                 </div>

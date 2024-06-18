@@ -17,22 +17,27 @@ function fH(ct) {
     xhr.send();
 }
 
-function fHq(hqid) {
-    fU(hqid, document.getElementById('role').value);
+function fHq(hqid,input) {
+    let output =(input==='hqlist1'?'from-list':'to-list');
+    let roleid=(input==='hqlist1'?'role':'role1')
+    fU(hqid, document.getElementById(roleid).value,output);
 }
 
-function fr(roleid) {
-    fU(document.getElementById('hqlist1').value, roleid);
+function fr(roleid,input) {
+    let output =(input==='role'?'from-list':'to-list');
+    let hqid=(input==='role'?'hqlist1':'hqlist2');
+    fU(document.getElementById(hqid).value, roleid,output);
 }
 
-function fU(hqid, roleid) {
+function fU(hqid, roleid,output) {
+    console.log(hqid + roleid + output);
     if (hqid !== 'Headquarter' && roleid !== 'Role') {
         const xhr = new XMLHttpRequest();
         const ct = document.getElementById('crop-type').value;
         xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + ct, true);
         xhr.onload = function() {
             if (this.status === 200) {
-                document.getElementById('from-list').innerHTML = this.responseText;
+                document.getElementById(output).innerHTML = this.responseText;
             }
         }
         xhr.send();

@@ -288,12 +288,12 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                         <input onkeyup="search(this.value,'hqlist1')" class="search-bar-input" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value)">
+                        <select id="hqlist1" class="drop-1" onchange="fHq(this.value,'hqlist1')">
                             <option>Headquarter</option>
                         </select>
                     </div>
                     <div>
-                        <select id="role" class="drop-2" onchange="fr(this.value)">
+                        <select id="role" class="drop-2" onchange="fr(this.value,'role')">
                             <option>Role</option>
                             <option value="4">TSM</option>
                             <option value="5">MDO</option>
@@ -330,8 +330,17 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                         <input class="search-bar-input" onkeyup="search(this.value,'hqlist2')" type="text" placeholder="Search...">
                     </div>
                     <div>
-                        <select id="hqlist2" class="drop-1">
+                        <select id="hqlist2" class="drop-1"onchange="fHq(this.value,'hqlist2')">
                             <option>Headquarter</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="role1" class="drop-2" onchange="fr(this.value,'role1')">
+                            <option>Role</option>
+                            <option value="4">TSM</option>
+                            <option value="5">MDO</option>
+                            <option value="11">RET</option>
+                            <option value="10">DRT</option>
                         </select>
                     </div>
                 </div>
@@ -367,22 +376,27 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             xhr.send();
         }
 
-        function fHq(hqid) {
-            fU(hqid, document.getElementById('role').value);
+        function fHq(hqid,input) {
+            let output =(input==='hqlist1'?'from-list':'to-list');
+            let roleid=(input==='hqlist1'?'role':'role1')
+            fU(hqid, document.getElementById(roleid).value,output);
         }
 
-        function fr(roleid) {
-            fU(document.getElementById('hqlist1').value, roleid);
+        function fr(roleid,input) {
+            let output =(input==='role'?'from-list':'to-list');
+            let hqid=(input==='role'?'hqlist1':'hqlist2');
+            fU(document.getElementById(hqid).value, roleid,output);
         }
 
-        function fU(hqid, roleid) {
+        function fU(hqid, roleid,output) {
+            console.log(hqid + roleid + output);
             if (hqid !== 'Headquarter' && roleid !== 'Role') {
                 const xhr = new XMLHttpRequest();
                 const ct = document.getElementById('crop-type').value;
                 xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + ct, true);
                 xhr.onload = function() {
                     if (this.status === 200) {
-                        document.getElementById('from-list').innerHTML = this.responseText;
+                        document.getElementById(output).innerHTML = this.responseText;
                     }
                 }
                 xhr.send();
