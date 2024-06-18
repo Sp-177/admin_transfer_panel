@@ -5,19 +5,20 @@ function transfer(src, dst, all) {
     const items = Array.from(all === 'a'? Array.from(source.options).filter(option => option.style.display !== 'none'): source.selectedOptions);
     items.forEach(item => destination.appendChild(item));
 }
-function fH(ct) {
+
+function fH(ct,input) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "?crop_type=" + ct, true);
     xhr.onload = function() {
         if (this.status === 200) {
-            document.getElementById('hqlist1').innerHTML = this.responseText;
-            document.getElementById('hqlist2').innerHTML = this.responseText;
+            document.getElementById((input==='crop-type'?'hqlist1':'hqlist2')).innerHTML = this.responseText;
         }
     }
     xhr.send();
 }
 
 function fHq(hqid,input) {
+    
     let output =(input==='hqlist1'?'from-list':'to-list');
     let roleid=(input==='hqlist1'?'role':'role1')
     fU(hqid, document.getElementById(roleid).value,output);
@@ -68,7 +69,7 @@ function fr(roleid,input) {
 }
 
 function fU(hqid, roleid,output) {
-    console.log(hqid + roleid + output);
+    
     if (hqid !== 'Headquarter' && roleid !== 'Role') {
         const xhr = new XMLHttpRequest();
         const ct = document.getElementById('crop-type').value;
@@ -86,7 +87,6 @@ function search(input, id) {
     const list = document.getElementById(id);
     const terms = input.split(/[,/\s-]+/).map(term => term.trim().toUpperCase());
     const options = Array.from(list.options);
-    
     options.forEach(option => {
         const text = option.textContent.toUpperCase();
         const value = option.value.toUpperCase();

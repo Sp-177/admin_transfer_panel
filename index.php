@@ -302,7 +302,7 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                         </select>
                     </div>
                     <div>
-                        <select id="crop-type" class="drop-2" onchange="fH(this.value)">
+                        <select id="crop-type" class="drop-2" onchange="fH(this.value,'crop-type')">
                             <option>CropType</option>
                             <option value="FC">FC</option>
                             <option value="VC">VC</option>
@@ -343,6 +343,13 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                             <option value="10">DRT</option>
                         </select>
                     </div>
+                    <div>
+                        <select id="crop-type1" class="drop-2" onchange="fH(this.value,'crop-type1')">
+                            <option>CropType</option>
+                            <option value="FC">FC</option>
+                            <option value="VC">VC</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="output">
                     <select id="to-list" class="list-elements" multiple></select>
@@ -364,13 +371,12 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             items.forEach(item => destination.appendChild(item));
         }
 
-        function fH(ct) {
+        function fH(ct,input) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "?crop_type=" + ct, true);
             xhr.onload = function() {
                 if (this.status === 200) {
-                    document.getElementById('hqlist1').innerHTML = this.responseText;
-                    document.getElementById('hqlist2').innerHTML = this.responseText;
+                    document.getElementById((input==='crop-type'?'hqlist1':'hqlist2')).innerHTML = this.responseText;
                 }
             }
             xhr.send();
