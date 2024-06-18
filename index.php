@@ -125,8 +125,8 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
             flex: auto;
             padding: 0.25rem 1.25rem 0.25rem 0.25rem;
             border-radius: 0.625rem;
-            background: url('search.png') no-repeat 98% 50%;
-            background-size: 0.9375rem;
+            background: url('https://www.freepnglogos.com/uploads/search-png/search-icon-transparent-images-vector-23.png') no-repeat right center;
+            background-size: 2.5rem;
         }
         .search-bar-input:focus {
             outline: none;
