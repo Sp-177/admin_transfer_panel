@@ -287,6 +287,7 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 <button onclick="transfer('from-list', 'to-list', 'n')">></button>
                 <button onclick="transfer('to-list', 'from-list', 'n')"><</button>
                 <button onclick="transfer('to-list', 'from-list', 'a')"><<</button>
+                <button onclick="undo()"><i class="fa fa-undo"></i></button>
             </div>
             <div class="to">
                 <div class="header">
@@ -325,16 +326,34 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 </div>
             </div>
         </div>
-        <button id='submit_button'class="submit-button" onclick="submit('submit_button')">Submit  </button>
+        <button id='submit_button'class="submit-button" onclick="submit('submit_button')">SUBMIT</button>
        
     </div>
     <script>
+        let undoStore=[];
+        function undo(){
+            if(undoStore.length>0){
+            const undObj=undoStore.pop();
+            const source = document.getElementById(undObj.src);
+            const destination = document.getElementById(undObj.dst);
+            undObj.items.forEach(item => source.appendChild(item));
+            }
+        }
         function transfer(src, dst, all) {
+            
             const source = document.getElementById(src);
             const destination = document.getElementById(dst);
-
+            if(document.getElementById('hqlist1').value==='Headquarter'||document.getElementById('hqlist2').value==='Headquarter'||document.getElementById('role').value==='Role'||document.getElementById('role1').value==='Role'){return;}
             const items = Array.from(all === 'a' ? Array.from(source.options).filter(option => option.style.display !== 'none') : source.selectedOptions);
             items.forEach(item => destination.appendChild(item));
+            
+            const undObj={
+                'src':src,
+                'dst':dst,
+                'items':items
+            };
+            undoStore.push(undObj);
+            
         }
 
         function fH(cropType, input) {
