@@ -331,21 +331,24 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
     </div>
     <script>
         let undoStore=[];
+        let hashmap=new Map();
         function undo(){
             if(undoStore.length>0){
             const undObj=undoStore.pop();
             const source = document.getElementById(undObj.src);
             const destination = document.getElementById(undObj.dst);
-            undObj.items.forEach(item => source.appendChild(item));
+            undObj.items.forEach(item =>{hashmap.delete(item.value); source.appendChild(item)});
             }
         }
         function transfer(src, dst, all) {
             
             const source = document.getElementById(src);
             const destination = document.getElementById(dst);
+            const srcHq=document.getElementById((src=='from-list'?'hqlist1':'hqlist2')).value;
+            const dstHq=document.getElementById((dst=='from-list'?'hqlist1':'hqlist2')).value;
             if(document.getElementById('hqlist1').value==='Headquarter'||document.getElementById('hqlist2').value==='Headquarter'||document.getElementById('role').value==='Role'||document.getElementById('role1').value==='Role'){return;}
             const items = Array.from(all === 'a' ? Array.from(source.options).filter(option => option.style.display !== 'none') : source.selectedOptions);
-            items.forEach(item => destination.appendChild(item));
+            items.forEach(item => {hashmap.set(item.value,{'src':srcHq,'dst':dstHq});destination.appendChild(item)});
             
             const undObj={
                 'src':src,
@@ -353,6 +356,10 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 'items':items
             };
             undoStore.push(undObj);
+        hashmap.forEach((item,index)=>{
+            console.log(index);
+            console.log(item);
+        })
             
         }
 
@@ -423,9 +430,25 @@ if (isset($_GET['hqid']) && isset($_GET['roleid']) && isset($_GET['ct'])) {
                 option.style.display = match ? '' : 'none';
             });
         }
+        function post(hashmap){
+
+        }
         function submit(input){
             const submitbutton=document.getElementById(input);
+            if(hashmap.size==0){alert("No modifications have been made !!!")}
+            else{
             submitbutton.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>  LOADING';
+            const xhr = new XMLHttpRequest();
+            submitbutton.innerHTML=SUBMIT;
+            if (this.status === 200) {
+                alert("Modified successfully !!!");
+            }
+            else{
+                alert("Server arguments error!!!");
+            }
+
+        }
+
         }
     </script>
 </body>
