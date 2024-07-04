@@ -221,6 +221,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: white;
             border-radius: 0.625rem;
         }
+        .modal{
+            justify-content: space-evenly;
+            align-items: center;
+            
+            width: 97vw;
+            border-radius: 30px;
+            background-color:red;
+            height: 270px;
+            margin:30px;
+        }
+      
         .search-bar-input {
             flex: auto;
             padding: 0.25rem 2.25rem 0.25rem 0.25rem;
@@ -344,8 +355,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
+     
+    
     <div class="container">
         <div class="canvas">
+            
             <!-- FROM Section -->
             <div class="from">
                 <div class="header">
@@ -379,6 +393,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </select>
                     </div>
                 </div>
+                
                 <div class="output">
                     <!-- List of users/items -->
                     <select id="from-list" class="list-elements" multiple></select>
@@ -391,14 +406,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </p>
                 </div>
             </div>
+
+
             <!-- Transfer buttons -->
+             
             <div class="transfer-button">
                 <button onclick="transfer('from-list', 'to-list', 'a')">>></button>
                 <button onclick="transfer('from-list', 'to-list', 'n')">></button>
-                <button onclick="transfer('to-list', 'from-list', 'swap')">SWAP</button>
+                <button onclick="transfer('to-list', 'from-list', 'swap')">swap</button>
                 <!-- <button onclick="transfer('to-list', 'from-list', 'a')"><<</button> -->
                 <button onclick="undo()"><i class="fa fa-undo"></i></button>
             </div>
+            
+            <!-- Dialog Section -->
+            <div>
+    <dialog class="modal"id="dialog">
+        <button id="close-dialog" style="margin:10px;width:20px;">X</button>
+    </dialog>
+</div>
+
+            
+        
+
             <!-- TO Section -->
             <div class="to">
                 <div class="header">
@@ -447,6 +476,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <!-- Submit button -->
         <button id='submit_button' class="submit-button" onclick="submit('submit_button')">SUBMIT</button>
+        
     </div>
 
     <script>
@@ -467,7 +497,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 });
             }
         }
-
+        function add(modal){
+            modal.style.display='flex';
+            modal.innerHTML+=`<div class='from' style='height:250px; width:250px;'>
+    <div class='header'>
+        <div class='search-bar'>
+            <input onkeyup='search(this.value, "HQLIST")' class='search-bar-input' type='text' placeholder='Search...'>
+        </div>
+        <div>
+            <select id='HQLIST' class='drop-1' onchange='fHq(this.value, "HQLIST")'>
+                <option>Headquarter</option>
+            </select>
+        </div>
+        <div>
+            <select id='ROLE' class='drop-2' onchange='fr(this.value, "ROLE")'>
+                <option value='Role'>Role</option>
+                <option value='4'>TSM</option>
+            </select>
+        </div>
+        <div>
+            <select id='CROPTYPE' class='drop-2' onchange='fH(this.value, "CROPTYPE")'>
+                <option>CropType</option>
+                <option value='FC'>FC</option>
+                <option value='VC'>VC</option>
+            </select>
+        </div>
+    </div>
+    <div class='output' style='height:50px; width:auto;'>
+        <select id='LIST' class='list-elements' multiple></select>
+    </div>
+</div>
+<button style='font-size:30px;' id='tsm-transfer'>-</button>
+`;
+            const tsmtransfer=document.getElementById('tsm-transfer');
+            tsmtransfer.addEventListener('click', ()=>{
+                add(modal);
+            })
+        }
         // Transfer function to move items between lists
         function transfer(src, dst, all) {
             const source = document.getElementById(src);
@@ -481,6 +547,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 document.getElementById('role').value === 'Role' ||
                 document.getElementById('role1').value === 'Role') {
                 return;
+            }
+
+            // modal dialog
+            if(document.getElementById('role').value==='4'){
+                const modal = document.getElementById('dialog');
+                
+                modal.showModal();
+                const array=[];
+                add(modal);
+                
+                document.getElementById('close-dialog').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    modal.innerHTML=`<button id="close-dialog" style="margin:10px;width:20px;">X</button>`;
+                    modal.close();
+                });
+                
+                return ;
             }
 
             // Swapping elements
@@ -528,7 +611,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             xhr.open("GET", "?crop_type=" + cropType, true);
             xhr.onload = function() {
                 if (this.status === 200) {
-                    const selectElem = document.getElementById(input === 'crop-type' ? 'hqlist1' : 'hqlist2');
+                    const selectElem = document.getElementById(input === 'crop-type' ? 'hqlist1' :input==='CROPTYPE'?'HQLIST':'hqlist2');
                     selectElem.innerHTML = this.responseText;
                 }
             };
@@ -537,14 +620,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Function to fetch users based on headquarters ID
         function fHq(hqid, input) {
-            let output = input === 'hqlist1' ? 'from-list' : 'to-list';
-            let roleid = input === 'hqlist1' ? 'role' : 'role1';
+            let output = input === 'hqlist1' ? 'from-list' :input==='HQLIST'?'LIST':'to-list';
+            let roleid = input === 'hqlist1' ? 'role' : input==='HQLIST'?'ROLE':'role1';
             fU(hqid, document.getElementById(roleid).value, output);
         }
 
         // Function to filter roles based on selection
         function fr(roleid, input) {
-            const options = document.getElementById(input === 'role' ? 'role1' : 'role').options;
+            const options = document.getElementById(input === 'role'?'role1':'role').options;
             Array.from(options).forEach(option => {
                 if ((roleid === '4') && (option.value === '5' || option.value === '10' || option.value === '11')) {
                     option.disabled = true;
@@ -561,8 +644,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
 
-            let output = input === 'role' ? 'from-list' : 'to-list';
-            let hqid = input === 'role' ? 'hqlist1' : 'hqlist2';
+            let output = input === 'role' ? 'from-list' : input==='ROLE'?'LIST':'to-list';
+            let hqid = input === 'role' ? 'hqlist1' : input==='ROLE'?'HQLIST':'hqlist2';
             fU(document.getElementById(hqid).value, roleid, output);
         }
 
@@ -570,7 +653,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function fU(hqid, roleid, output) {
             if (hqid !== 'Headquarter' && roleid !== 'Role'&&hqid !==''&&roleid !=='') {
                 const xhr = new XMLHttpRequest();
-                const cropType = document.getElementById((output === 'to-list') ? 'crop-type1' : 'crop-type').value;
+                const cropType = document.getElementById((output === 'to-list') ? 'crop-type1' :(output === 'LIST') ? 'CROPTYPE' : 'crop-type').value;
                 xhr.open("GET", "?hqid=" + hqid + "&roleid=" + roleid + "&ct=" + cropType, true);
                 xhr.onload = function() {
                     if (this.status === 200) {
