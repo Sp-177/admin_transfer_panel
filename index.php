@@ -395,8 +395,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="transfer-button">
                 <button onclick="transfer('from-list', 'to-list', 'a')">>></button>
                 <button onclick="transfer('from-list', 'to-list', 'n')">></button>
-                <button onclick="transfer('to-list', 'from-list', 'n')"><</button>
-                <button onclick="transfer('to-list', 'from-list', 'a')"><<</button>
+                <button onclick="transfer('to-list', 'from-list', 'swap')">SWAP</button>
+                <!-- <button onclick="transfer('to-list', 'from-list', 'a')"><<</button> -->
                 <button onclick="undo()"><i class="fa fa-undo"></i></button>
             </div>
             <!-- TO Section -->
@@ -463,7 +463,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 const destination = document.getElementById(undObj.dst);
                 undObj.items.forEach(item => {
                     hashmap.delete(item.value);
-                    source.appendChild(item);
+                    source.insertBefore(item,source.firstChild);
                 });
             }
         }
@@ -483,7 +483,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 return;
             }
 
-            // Collect items to transfer
+            // Swapping elements
+            if (all ==='swap') {
+                if(source.selectedOptions.length==1 && destination.selectedOptions.length==1){
+                    const temp = source.selectedOptions[0];
+                    const temp1 = destination.selectedOptions[0];
+                    source.insertBefore(temp1,source.firstChild);
+                    destination.insertBefore(temp,destination.firstChild);
+                    hashmap.set(temp.value, { 'src': srcHq, 'dst': dstHq });
+                    hashmap.set(temp1.value, { 'src': dstHq, 'dst': srcHq });
+                    
+                    const undObj = { 'src': src, 'dst': dst, 'items': [temp] };
+                    undoStore.push(undObj);
+                    const undObj1 = { 'src': dst, 'dst': src, 'items':[temp1] };
+                    undoStore.push(undObj1);
+                   
+                }
+                else{
+                    alert("Please select only one option from each section to swap options")
+                   
+                }
+                return ;
+            }
+
+            // Collect items to transfer when selected all
             const items = Array.from(all === 'a' ?
                 Array.from(source.options).filter(option => option.style.display !== 'none') :
                 source.selectedOptions);
@@ -491,7 +514,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Move items and update hashmap
             items.forEach(item => {
                 hashmap.set(item.value, { 'src': srcHq, 'dst': dstHq });
-                destination.appendChild(item);
+                destination.insertBefore(item, destination.firstChild);
             });
 
             // Store the action for undo
